@@ -1,0 +1,33 @@
+MIT License
+
+Copyright (c) 2026 TermAsk contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## 分范围声明（Scope notes）
+
+本文件是 TermAsk Workbench 仓库的**主许可证**，适用于仓库内全部自有代码与文档。
+前端、后端各自的范围细化与第三方组件合规义务见下列文档，它们是说明性补充，不替代本文件：
+
+- 前端与浏览器插件（`src/`、`extensions/term-ask/` 前端代码）：MIT，第三方组件声明（tldraw 水印、React Flow attribution 等）见 [docs/LICENSE-frontend.md](./docs/LICENSE-frontend.md)。
+- 后端与仓库总体（`src-tauri/`、`docs/`、构建配置）：MIT，Rust 依赖与再分发注意事项见 [docs/LICENSE-backend.md](./docs/LICENSE-backend.md)。
+
+再分发桌面安装包时，须同时遵守 `docs/LICENSE-frontend.md` 列出的水印与 attribution 保留义务。

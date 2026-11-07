@@ -1,0 +1,82 @@
+# TermAsk Workbench —— Windows Tauri 安装包自动发布
+#
+# 触发：推送 v* 格式的 tag（如 v0.1.0）
+# 行为：在 windows-latest 构建 Tauri 安装包，并创建 GitHub **Draft Release**（不自动正式发布）
+# 依据：src-tauri/tauri.conf.json 的 beforeBuildCommand = "npm run build"、
+#       frontendDist = "../dist"、bundle.targets = "all"（Windows 产出 NSIS .exe 与 WiX .msi）
+# 说明：Gitee 是镜像仓库，需发布方手动同步；本工作流只发布 GitHub Release。
+
+name: Release (Windows / Tauri)
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  # 若仓库把 termask-workbench/ 作为子目录，请统一改这里（例如 ./termask-workbench），
+  # 同时下方 working-directory / cache-dependency-path / projectPath 会自动跟随。
+  PROJECT_ROOT: .
+  NODE_VERSION: '22'
+
+jobs:
+  windows-installer:
+    name: Build Windows installer and create Draft Release
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: ${{ env.PROJECT_ROOT }}/package-lock.json
+
+      # Rust edition 2024 需要 rustc >= 1.85；stable 始终满足。
+      # windows-latest 已预装 VS C++ Build Tools (MSVC) 与 WebView2 Runtime，无需额外安装。
+      - name: Install Rust stable (MSVC target)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Install frontend dependencies
+        working-directory: ${{ env.PROJECT_ROOT }}
+        run: npm ci
+
+      # tauri-action 会执行 `npm run tauri build`；Tauri CLI 先跑
+      # beforeBuildCommand（npm run build）生成 dist/，再编译 Rust 并打包。
+      - name: Build Tauri bundles and publish Draft Release
+        uses: tauri-apps/tauri-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # v0.1.0 未启用更新签名（plugins.updater.endpoints / pubkey 为空，
+          # 且未设置 bundle.createUpdaterArtifacts），因此不需要签名私钥。
+          # 将来启用 updater 时，在仓库 Secrets 中添加并取消下面两行注释：
+          # TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          # TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          projectPath: ${{ env.PROJECT_ROOT }}
+          tagName: ${{ github.ref_name }}
+          releaseName: 'TermAsk Workbench ${{ github.ref_name }}'
+          releaseBody: |
+            TermAsk Workbench ${{ github.ref_name }}（Windows x86_64）。
+
+            安装包见下方 Assets：NSIS `.exe`（setup）与 WiX `.msi`。
+            这是一个 **Draft Release**，由维护者核对后再正式发布。
+
+            注意：v0.1.0 未配置更新清单 URL 与签名公钥，本 Release 不含 `latest.json`
+            更新签名产物；应用内「检查更新」会返回可读提示。Gitee 镜像需发布方手动同步。
+          releaseDraft: true
+          prerelease: false
+          # updater 未配置，避免生成/上传无签名的 latest.json
+          uploadUpdaterJson: false

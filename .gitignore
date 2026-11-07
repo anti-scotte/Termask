@@ -1,0 +1,61 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+# 绝对不要上传的巨型编译产物
+src-tauri/target/
+extensions/term-ask/.output/
+extensions/term-ask/.wxt/
+# 本地环境变量
+.env
+.env.local
+.env.*
+
+# ── 安全：凭证 / 私钥 / 本机运行期数据，绝不入库 ──
+# 说明：这些文件由用户在本机配置，含 API Key、SMTP 授权码、桥接令牌与账户数据
+*.key
+*.pem
+*.p12
+*.pfx
+*.keystore
+id_rsa*
+smtp.json
+bridge.json
+account.json
+session.json
+location.json
+graphs/
+whiteboards/
+exports/
+
+# ── 独立编译目录与测试产物（CARGO_TARGET_DIR=target-check，体积可达 10G+）──
+src-tauri/target-check/
+*.tmp
+
+# ── 安装包与打包产物：只上传 Release 资产，不进 Git ──
+*.exe
+*.msi
+*.zip
+
+# 若确需提交上述某类资源，在此用 ! 单独放行，例如：
+# !public/templates/demo-template.zip

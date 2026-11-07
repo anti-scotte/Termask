@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>TermAsk 配置</title>
+    <style>
+      body { font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+             max-width: 420px; margin: 32px auto; padding: 0 16px; color: #1a1a1a; }
+      h1 { font-size: 18px; margin-bottom: 20px; }
+      label { display: block; margin-bottom: 14px; font-size: 13px; color: #444; }
+      input { display: block; width: 100%; margin-top: 4px; padding: 7px 9px;
+              border: 1px solid #ccc; border-radius: 6px; font-size: 13px; box-sizing: border-box; }
+      input:focus { outline: none; border-color: #1a73e8; }
+      button { margin-top: 6px; padding: 8px 20px; border: none; border-radius: 6px;
+               background: #1a73e8; color: #fff; font-size: 13px; cursor: pointer; }
+      button:hover { background: #1663c7; }
+      #status { margin-left: 10px; font-size: 12px; color: #2e7d32; }
+      .hint { margin-top: 18px; font-size: 12px; color: #888; line-height: 1.6; }
+    </style>
+  </head>
+  <body>
+    <h1>API 配置（直连）</h1>
+    <label>
+      Base URL（OpenAI 兼容）
+      <input id="baseUrl" type="text" placeholder="https://api.deepseek.com" />
+    </label>
+    <label>
+      API Key
+      <input id="apiKey" type="password" placeholder="sk-..." />
+    </label>
+    <label>
+      模型名称
+      <input id="model" type="text" placeholder="deepseek-chat" />
+    </label>
+    <label>
+      桥接令牌（可选）
+      <input id="bridgeToken" type="password" placeholder="工作台 → 设置 → 通用 → 本地桥接安全" />
+    </label>
+    <button id="save">保存</button>
+    <span id="status"></span>
+    <p class="hint">
+      阶段1仅支持 API 直连（默认 DeepSeek）。Key 只存在本机 chrome.storage.local，
+      不上传任何服务器；同会话内不切换模型。<br />
+      桥接令牌：工作台开启「令牌校验」后，把设置页里的令牌粘贴到此处，
+      否则划词写入会被工作台拒绝（401）。
+    </p>
+    <script type="module" src="./options.ts"></script>
+  </body>
+</html>
